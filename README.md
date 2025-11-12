@@ -10,6 +10,7 @@ First, set up an S3 bucket with the following folder structure to manage the dat
     * **`raw/`**: For incoming raw data files.
     * **`processed/`**: For cleaned and filtered data output by the Lambda function.
     * **`enriched/`**: For storing athena query results.
+<img width="1470" height="956" alt="1  S3 Bucket" src="https://github.com/user-attachments/assets/746b1cb6-5524-4986-a714-5ec16ae04ca7" />
 
 ---
 
@@ -27,6 +28,9 @@ Create the following IAM roles to grant AWS services the necessary permissions t
     * `AmazonS3FullAccess`
 5.  Give the role a descriptive name (e.g., `Lambda-S3-Processing-Role`) and create it.
 
+<img width="1470" height="956" alt="3  Lambda IAM" src="https://github.com/user-attachments/assets/ff1d54d5-014e-4777-8537-098126b8e754" />
+
+
 ### Glue Service Role
 
 1.  Create another IAM role for **AWS service** with the use case **Glue**.
@@ -36,6 +40,8 @@ Create the following IAM roles to grant AWS services the necessary permissions t
     * `AWSGlueServiceRole`
 3.  Name the role (e.g., `Glue-S3-Crawler-Role`) and create it.
 
+<img width="1470" height="956" alt="4  Glue IAM" src="https://github.com/user-attachments/assets/96db9d6b-747a-473b-b7d8-97c1969248e9" />
+
 ### EC2 Instance Profile
 
 1.  Create a final IAM role for **AWS service** with the use case **EC2**.
@@ -43,6 +49,8 @@ Create the following IAM roles to grant AWS services the necessary permissions t
     * `AmazonS3FullAccess`
     * `AmazonAthenaFullAccess`
 3.  Name the role (e.g., `EC2-Athena-Dashboard-Role`) and create it.
+
+<img width="1470" height="956" alt="5  EC2 IAM" src="https://github.com/user-attachments/assets/1e5af8e5-ea0c-4611-9f7d-e2da45bc08ad" />
 
 ---
 
@@ -59,6 +67,8 @@ This function will automatically process files uploaded to the `raw/` S3 folder.
 7.  Click **Create function**.
 8.  In the **Code source** editor, replace the default code with LambdaFunction.py code for processing the raw data.
 
+<img width="1470" height="956" alt="6  Lambda function python code" src="https://github.com/user-attachments/assets/f7990eee-81ba-4574-9f81-93c2220c61e5" />
+
 ---
 
 ## 4. Configure the S3 Trigger ⚡
@@ -73,9 +83,12 @@ Set up the S3 trigger to invoke your Lambda function automatically.
 6.  **Suffix (Recommended)**: Enter `.csv`.
 7.  Check the acknowledgment box and click **Add**.
 
+<img width="1470" height="956" alt="7  Trigger configuration" src="https://github.com/user-attachments/assets/1997938c-36d7-490f-b2cb-cc8d53b67b31" />
+
 --- 
 **Start Processing of Raw Data**: Now upload the Orders.csv file into the `raw/` folder of the S3 Bucket. This will automatically trigger the Lambda function.
 ---
+<img width="1470" height="956" alt="2  Uploading input file into raw" src="https://github.com/user-attachments/assets/f07a38da-e337-4a53-a640-68f3e1c65b79" />
 
 ## 5. Create a Glue Crawler 🕸️
 
@@ -89,6 +102,8 @@ The crawler will scan your processed data and create a data catalog, making it q
 6.  **Output**: Click **Add database** and create a new database named `orders_db`.
 7.  Finish the setup and run the crawler. It will create a new table in your `orders_db` database.
 
+<img width="1470" height="956" alt="9  Order processed crawler" src="https://github.com/user-attachments/assets/6585cdd4-d60e-486c-b620-1883a685936f" />
+
 ---
 
 ## 6. Query Data with Amazon Athena 🔍
@@ -101,6 +116,8 @@ Navigate to the **Athena** service. Ensure your data source is set to `AwsDataCa
 * **Order Status Dashboard**: Summarize orders based on their status (`shipped` vs. `confirmed`).
 * **Average Order Value (AOV) per Customer**: Find the average amount spent per order for each customer.
 * **Top 10 Largest Orders in February 2025**: Retrieve the highest-value orders from a specific month.
+
+<img width="1470" height="956" alt="13  Athena Query results in enriched" src="https://github.com/user-attachments/assets/6660b700-497a-4db7-8b16-75186db236b9" />
 
 ---
 
@@ -133,7 +150,8 @@ This instance will host a simple web page to display the Athena query results.
     ssh -i /path/to/your-key-file.pem ec2-user@YOUR_PUBLIC_IP_ADDRESS
     ```
 
----
+<img width="1470" height="956" alt="24  Connected to EC2 instance" src="https://github.com/user-attachments/assets/01543456-194e-4f86-82f6-b5b13b357063" />
+
 
 ## 9. Set Up the Web Environment
 
@@ -184,6 +202,11 @@ Once connected via SSH, run the following commands to install the necessary soft
     http://YOUR_PUBLIC_IP_ADDRESS:5000
     ```
     You should now see your Athena Orders Dashboard!
+
+<img width="1470" height="956" alt="26  Athena dashboard results 1" src="https://github.com/user-attachments/assets/e35b4645-b079-47c2-834f-bf7e9bfb40c5" />
+
+<img width="1470" height="956" alt="27  Athen dashboard results 2" src="https://github.com/user-attachments/assets/a8f1ed28-a6fc-4018-ad75-7aa2b8c31795" />
+
 
 ---
 
